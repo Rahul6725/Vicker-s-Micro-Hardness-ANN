@@ -10,6 +10,9 @@ import pandas as pd
 df = pd.read_excel(r'pred_hv_comp.xlsx')   
 df.head()
 df.dtypes
+from xlrd import open_workbook
+from xlutils.copy import copy
+import pyexcel as p
 import numpy as np
 import pymatgen as mg
 import matplotlib.pyplot as plt
@@ -70,4 +73,10 @@ composition=pd.DataFrame(composition)
 predicted=np.column_stack((composition,X))
 predicted=pd.DataFrame(predicted)
 predicted.to_excel('pred_hv_descriptors.xlsx', index=False,header=header)
+rb = open_workbook("pred_hv_descriptors.xlsx")
+wb = copy(rb)
+s = wb.get_sheet(0)
+s.write(0,141,'Hardness value')
+wb.save('pred_hv_descriptors.xls')
+p.save_book_as(file_name='pred_hv_descriptors.xls', dest_file_name='pred_hv_descriptors.xlsx')
 print("A file named pred_hv_descriptors.xlsx has been generated.\nPlease check your folder.")
