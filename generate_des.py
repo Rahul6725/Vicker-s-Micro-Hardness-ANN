@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
 
+'''
 
-@author: Ziyan Zhang, University of Houston
-"""
+To generate all thhe required properties to find Vicker Hardness Value
 
-#import general python package/ read in compounds list
+'''
+# Basic library import Starts
+
 import pandas as pd 
-df = pd.read_excel(r'pred_hv_comp.xlsx')   
-df.head()
-df.dtypes
 from xlrd import open_workbook
 from xlutils.copy import copy
 import pyexcel as p
@@ -17,6 +14,16 @@ import numpy as np
 import pymatgen as mg
 import matplotlib.pyplot as plt
 from statistics import mean
+
+# Basic library import Ends
+
+
+
+df = pd.read_excel(r'pred_hv_comp.xlsx')   
+df.head()
+df.dtypes
+
+
 class Vectorize_Formula:
 
     def __init__(self):
@@ -45,12 +52,15 @@ class Vectorize_Formula:
             min_feature = self.element_df.loc[list(fractional_composition.keys())].min()
             std_feature=self.element_df.loc[list(fractional_composition.keys())].std(ddof=0)
             
+
             features = pd.DataFrame(np.concatenate([avg_feature, diff_feature, np.array(max_feature), np.array(min_feature)]))
             features = np.concatenate([avg_feature, diff_feature, np.array(max_feature), np.array(min_feature)])
             return features.transpose()
         except:
             print('There was an error with the Formula: '+ formula + ', this is a general exception with an unkown error')
             return [np.nan]*len(self.element_df.iloc[0])*4
+
+#initiating class object
 gf=Vectorize_Formula()
 
 # empty list for storage of features
@@ -67,12 +77,14 @@ pd.set_option('display.max_columns', None)
 header=gf.column_names
 header.insert(0,"Composition")
 
-composition=pd.read_excel('pred_hv_comp.xlsx',sheet_name='Sheet1', usecols="A")
-composition=pd.DataFrame(composition)
+composition1=pd.read_excel('pred_hv_comp.xlsx',sheet_name='Sheet1', usecols="A")
+composition1=pd.DataFrame(composition1)
 
-predicted=np.column_stack((composition,X))
+predicted=np.column_stack((composition1,X))
 predicted=pd.DataFrame(predicted)
 predicted.to_excel('pred_hv_descriptors.xlsx', index=False,header=header)
+
+
 rb = open_workbook("pred_hv_descriptors.xlsx")
 wb = copy(rb)
 s = wb.get_sheet(0)
