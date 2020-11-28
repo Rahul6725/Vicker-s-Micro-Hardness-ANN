@@ -18,12 +18,14 @@ Y = array[:,0]
 from sklearn.model_selection import train_test_split
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.9, test_size=0.1,random_state=100, shuffle=True)
 
+
 #scale the data
 
 from sklearn import preprocessing
 scaler = preprocessing.StandardScaler().fit(X_train)
 X_train = scaler.transform(X_train)
 X_test = scaler.transform(X_test)
+
 
 
 # XGB model construction
@@ -33,6 +35,9 @@ xgb_model = xgb.XGBRegressor(max_depth=4, learning_rate=0.05, n_estimators=1000,
                              reg_lambda=4, scale_pos_weight=1, base_score=0.6, missing=None,
                              num_parallel_tree=1, importance_type='gain', eval_metric='rmse',nthread=4).fit(X_train,Y_train)
 
+X_pred =xgb_model.predict(X_test)
+mse = mean_absolute_error(Y_test, X_pred)
+print("MeanAbsoluteError: " + str(mse))
 
 # Prediction
 prediction = pd.read_excel('pred_hv_descriptors_new.xlsx')
