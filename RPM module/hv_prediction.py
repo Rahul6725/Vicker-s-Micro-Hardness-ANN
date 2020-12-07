@@ -15,11 +15,11 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from matplotlib import pyplot as plt
 
 # load dataset
-DE = read_excel('hv_des.xlsx')
+DE = read_excel('hv_des_new.xlsx')
 array = DE.values
-X = array[:,1:142]
+X = array[:,1:8]
 Y = array[:,0]
-z = array[:,141]
+z = array[:,7]
 
 
 # Train-test split
@@ -51,15 +51,15 @@ plt.ylabel("Hardness")
 plt.show()
 
 result = xgb_model.predict(X_train)
-plt.plot(Z_train, result, 'ro')
+plt.plot(Z_train, result, 'go')
 plt.show()
 # Prediction
-prediction = pd.read_excel('pred_hv_descriptors.xlsx')
+prediction = pd.read_excel('pred_hv_descriptors_new.xlsx')
 a = prediction.values
-b = a[:,1:142]
+b = a[:,1:8]
 b = scaler.transform(b)
 result=xgb_model.predict(b)
-composition=pd.read_excel('pred_hv_descriptors.xlsx',sheet_name='Sheet1', usecols="A")
+composition=pd.read_excel('pred_hv_descriptors_new.xlsx',sheet_name='Sheet1', usecols="A")
 composition=pd.DataFrame(composition)
 result=pd.DataFrame(result)
 print(result)

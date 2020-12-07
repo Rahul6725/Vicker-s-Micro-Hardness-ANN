@@ -66,7 +66,6 @@ header.insert(0,"Composition")
 
 composition=pd.read_excel('pred_hv_comp.xlsx',sheet_name='Sheet1', usecols="A")
 composition=pd.DataFrame(composition)
-
 predicted=np.column_stack((composition,X))
 predicted=pd.DataFrame(predicted)
 predicted.to_excel('pred_hv_descriptors.xlsx', index=False,header=header)
