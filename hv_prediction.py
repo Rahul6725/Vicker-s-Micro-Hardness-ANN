@@ -12,19 +12,19 @@ from pandas import read_excel
 from sklearn.utils import resample
 from sklearn.svm import SVR
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
-
+from matplotlib import pyplot as plt
 
 # load dataset
 DE = read_excel('hv_des.xlsx')
 array = DE.values
 X = array[:,1:142]
 Y = array[:,0]
+z = array[:,141]
 
 
 # Train-test split
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, Y, train_size=0.9, test_size=0.1,random_state=0, shuffle=True)
-
+X_train, X_test, y_train, y_test, Z_train, Z_test = train_test_split(X, Y, z, train_size=0.9, test_size=0.1,random_state=0, shuffle=True)
 #scale the data
 
 from sklearn import preprocessing
@@ -40,6 +40,19 @@ xgb_model = xgb.XGBRegressor(max_depth=4, learning_rate=0.05, n_estimators=672, 
                              reg_lambda=4, scale_pos_weight=1, base_score=0.6, missing=None,
                              num_parallel_tree=1, importance_type='gain', eval_metric='rmse',nthread=4).fit(X_train,y_train)
 
+result = xgb_model.predict(X_test)
+plt.plot(result, y_test, 'ro')
+plt.ylabel("Hardness")
+plt.show()
+
+result = xgb_model.predict(X_train)
+plt.plot(result, y_train, 'bo')
+plt.ylabel("Hardness")
+plt.show()
+
+result = xgb_model.predict(X_train)
+plt.plot(Z_train, result, 'go')
+plt.show()
 # Prediction
 prediction = pd.read_excel('pred_hv_descriptors.xlsx')
 a = prediction.values
